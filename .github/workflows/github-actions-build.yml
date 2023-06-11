@@ -44,6 +44,6 @@ jobs:
       with:
         upload_url: ${{ steps.upload.outputs.upload_url }}
         asset_path: ./plugin.zip
-        asset_name: wp-order-tracker-plugin-.zip
+        asset_name: wp-order-tracker-plugin-v${{ github.run_number }}.zip
         asset_content_type: application/zip
         release_id: ${{ github.event.release.id }}
