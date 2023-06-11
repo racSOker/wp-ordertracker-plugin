@@ -39,8 +39,9 @@ jobs:
 
     - name: Subir contenido empaquetado como release
       uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
         upload_url: ${{ steps.upload.outputs.upload_url }}
         asset_path: ./plugin.zip
         asset_name: plugin.zip
