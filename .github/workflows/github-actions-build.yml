@@ -26,6 +26,17 @@ jobs:
         git config user.email "actions@github.com"
         git tag -a v${{ github.run_number }} -m "Versión ${{ github.run_number }}"
 
+    - name: Obtener URL de carga de la release
+      id: upload
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.run_number }}
+        release_name: Release v${{ github.run_number }}
+        draft: false
+        prerelease: false
+
     - name: Subir contenido empaquetado como release
       uses: actions/upload-release-asset@v1
       with:
