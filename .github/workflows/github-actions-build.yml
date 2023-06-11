@@ -1,18 +1,35 @@
-name: Build release zip
+name: Crear release
+
 on:
   push:
     branches:
-    - main
+      - main
 
 jobs:
-  build:
-    name: Build release zip
+  release:
     runs-on: ubuntu-latest
+    
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-    - name: Build plugin # Remove or modify this step as needed
+    - name: Checkout del repositorio
+      uses: actions/checkout@v2
+
+    - name: Resolver dependencias con Composer
+      run: composer install --no-dev --optimize-autoloader
+      
+    - name: Empaquetar contenido del repositorio
+      run: zip -r plugin.zip ./ -x "*.git*" "composer.*" ".gitignore"
+
+    - name: Crear tag de commit
+      if: github.ref == 'refs/heads/main'
       run: |
-        composer install --no-dev
-    - name: Generate zip
-      uses: 10up/action-wordpress-plugin-build-zip@stable
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+        git tag -a v${{ github.run_number }} -m "Versión ${{ github.run_number }}"
+
+    - name: Subir contenido empaquetado como release
+      uses: actions/upload-release-asset@v1
+      with:
+        asset_path: ./plugin.zip
+        asset_name: plugin.zip
+        asset_content_type: application/zip
+        release_id: ${{ github.event.release.id }}
