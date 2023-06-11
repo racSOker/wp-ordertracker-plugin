@@ -15,7 +15,10 @@ jobs:
 
     - name: Resolver dependencias con Composer
       run: composer install --no-dev --optimize-autoloader
-      
+
+    - name: Generar versión semántica
+      run: npx semantic-release
+
     - name: Empaquetar contenido del repositorio
       run: zip -r plugin.zip ./ -x "*.git*" "composer.*" ".gitignore"
 
@@ -24,7 +27,8 @@ jobs:
       run: |
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
-        git tag -a v${{ github.run_number }} -m "Versión ${{ github.run_number }}"
+        git tag -a v${{ env.npm_package_version }} -m "Versión ${{ env.npm_package_version }}"
+
 
     - name: Obtener URL de carga de la release
       id: upload
@@ -44,6 +48,6 @@ jobs:
       with:
         upload_url: ${{ steps.upload.outputs.upload_url }}
         asset_path: ./plugin.zip
-        asset_name: plugin.zip
+        asset_name: wp-order-tracker-plugin-${{ env.npm_package_version }}.zip
         asset_content_type: application/zip
         release_id: ${{ github.event.release.id }}

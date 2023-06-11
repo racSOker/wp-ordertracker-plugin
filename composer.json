@@ -1,5 +1,8 @@
 {
     "require": {
         "automattic/woocommerce": "^3.1"
-    }
+    },
+    "require-dev": {
+        "semantic-release/semantic-release": "^17.0.7"
+      }
 }
